@@ -2,14 +2,21 @@ import React, { useState, useEffect } from 'react';
 import Communication from './Communication';
 import axios from 'axios';
 
-const Notification = ({ message }) => {
+
+interface NotificationProps {
+  message: string | null;
+}
+
+
+// const Notification = ({ message }) => {
+  const Notification: React.FC<NotificationProps> = ({ message }) => {
   if (message === null) {
     return null;
   }
   return <div className="error">{message}</div>;
 };
 
-const CountryInfo = ({ country }) => {
+const CountryInfo:React.FC<{ country: any }> = ({ country }) => {
   return (
     <div>
       <h2>{country.name.common}</h2>
@@ -55,7 +62,8 @@ const App = () => {
     setFilteredCountries(filtered);
   }, [countries, searchTerm]);
 
-  const handleSearch = (event) => {
+  // const handleSearch = (event) => {
+    const handleSearch: React.FormEventHandler<HTMLFormElement> = (event) => {
     setSearchTerm(event.target.value);
   };
 
