@@ -1,5 +1,5 @@
 const Communication = {
-    manejarError: (name) => {
+    manejarError: (name:string) => {
       alert(`${name} is already added to phonebook.`);
     }
   };
