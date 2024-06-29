@@ -169,6 +169,8 @@ const noteData = new Note({
 const userData = new User({
   mame: 'Rubén G.',
   important: true,
+ date: '02/10/2024'
+
 });
 
 const note=new Note(noteData)
@@ -187,6 +189,14 @@ user.save().then(result => {
 }).catch(error => {
   console.error('Error saving note:', error.message);
 });
+
+
+Note.find({important:true}).then(notes => {
+  console.log('Notes:', notes);
+}).catch(error => {
+  console.error('Error finding notes:', error.message);
+});
+
 
 
 app.get('/api/notes', async (req, res) => {
