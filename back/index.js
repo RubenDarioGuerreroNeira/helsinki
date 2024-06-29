@@ -134,7 +134,7 @@ const mongoose = require('mongoose')
 
 
 const connectToMongoose = async () => {
-    const url = `mongodb+srv://rudargeneira:${process.env.MONGO_PASSWORD}@cluster0.mvojlb2.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+    const url = `mongodb+srv://rudargeneira:${process.env.MONGO_PASSWORD}@cluster0.mvojlb2.mongodb.net/noteApp?retryWrites=true&w=majority&appName=Cluster0`;
   // console.log('Conectando a MongoDB con URL:', url);  // Logging the URL
   mongoose.set('strictQuery', false)
   
@@ -156,6 +156,7 @@ const noteSchema = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
   name: String,
   important: Boolean,
+  date: Date,
 });
 
 const Note = mongoose.model('Note', noteSchema);
