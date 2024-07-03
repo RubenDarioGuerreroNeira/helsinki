@@ -20,9 +20,22 @@ const connecttoMongoose=async()=>{
 connecttoMongoose();
 
 const noteSchema= new mongoose.Schema({
-    content:String,
-    important:Boolean,
-});
+    content:{
+        type:String,
+        minlength:5,
+        required:true,
+    },
+    date:{
+        type:Date,
+        default:Date.now
+    },
+    important:{
+        type:Boolean,
+        required:true,
+        default:true
+    }
+})
+
 // const Note= mongoose.model('Note',noteSchema)
 
 const noteData=[{
