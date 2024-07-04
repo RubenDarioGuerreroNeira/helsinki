@@ -9,7 +9,8 @@ const Note = require('./models/NotPhone');
 const User = require('./models/UserPhone');
 const cors = require('cors');
 app.use(morgan('tiny'));
-
+const notesRouter = require('./Controllers/notesController');
+const userRoutes = require('./Controllers/userControllers');
 
 app.use(cors());
 
@@ -53,114 +54,90 @@ User.insertMany(UserData).then(result => {
 }).catch(error => {
   console.error('Error saving users:', error);
 });
-//----USERS-------
 
-app.delete('/api/user/:id', (request, response, next) => {
-  User.findByIdAndRemove(request.params.id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch(error => next(error));
-});
+app.use('/api/users', userRoutes);
+
+// app.use(express.static('build')
+// //----USERS-------
+// app.delete('/api/user/:id', (request, response, next) => {
+//   User.findByIdAndRemove(request.params.id)
+//     .then(() => {
+//       response.status(204).end();
+//     })
+//     .catch(error => next(error));
+// });
 
 
-app.post('/api/users',async(req,res)=>{
-  const user = req.body;
-  const userObject = new User({
-    name: user.name,
-    number: user.number,
-    
-  });
-    userObject.save()
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      res.status(400).json({
-        error: error.message
-      });
-    });
-});
-
- 
-//app.post('/api/user', (request, response) => {
-//   const user = request.body;
-
-//   if (!user.name || !user.number) {
-//     return response.status(400).json({
-//       error: 'Name and number are required'
-//     });
-//   }
-
+// app.post('/api/users',async(req,res)=>{
+//   const user = req.body;
 //   const userObject = new User({
 //     name: user.name,
-//     number: user.number
+//     number: user.number,
+    
 //   });
-
-//   userObject.save()
+//     userObject.save()
 //     .then(result => {
-//       response.json(result);
+//       res.json(result);
 //     })
 //     .catch(error => {
-//       response.status(400).json({
+//       res.status(400).json({
 //         error: error.message
 //       });
 //     });
 // });
 
-app.put('/api/user/:id', (request, response, next) => {
-  const { name, number } = request.body;
-  User.findByIdAndUpdate(
-    request.params.id,
-    { name, number },
-    { new: true, runValidators: true, context: 'query' }
-  )
-    .then(updatedUser => {
-      response.json(updatedUser);
-    })
-    .catch(error => next(error));
-});
+// app.put('/api/user/:id', (request, response, next) => {
+//   const { name, number } = request.body;
+//   User.findByIdAndUpdate(
+//     request.params.id,
+//     { name, number },
+//     { new: true, runValidators: true, context: 'query' }
+//   )
+//     .then(updatedUser => {
+//       response.json(updatedUser);
+//     })
+//     .catch(error => next(error));
+// });
 
 
-app.get('/api/users', async (req, res) => {
-try {
-  const users = await User.find({});
-  res.json(users);
-} catch (error) {
-  res.status(500).json({ error: 'Error al obtener los usuarios' });
-}
-});
+// app.get('/api/users', async (req, res) => {
+// try {
+//   const users = await User.find({});
+//   res.json(users);
+// } catch (error) {
+//   res.status(500).json({ error: 'Error al obtener los usuarios' });
+// }
+// });
 
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:965311461.
+app.use('/api/notes', notesRouter)
 
+// // NOTES------------
+// app.get('/api/notes', async (req, res) => {
+//   try {
+//     const notes = await Note.find({});
+//     res.json(notes);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Error al obtener las notas' });
+//   }
+// });
 
-
-
-// NOTES------------
-app.get('/api/notes', async (req, res) => {
-  try {
-    const notes = await Note.find({});
-    res.json(notes);
-  } catch (error) {
-    res.status(500).json({ error: 'Error al obtener las notas' });
-  }
-});
-
-app.post('/api/notes',async(req,res)=>{
-  const note = req.body;
-  const noteObject = new Note({
-    content: note.content,
-    important: note.important || false,
-  });
-  noteObject.save()
-    .then(result => {
-      res.json(result);
-    })
-    .catch(error => {
-      res.status(400).json({
-        error: error.message
-      });
-    });
-});
+// app.post('/api/notes',async(req,res)=>{
+//   const note = req.body;
+//   const noteObject = new Note({
+//     content: note.content,
+//     important: note.important || false,
+//   });
+//   noteObject.save()
+//     .then(result => {
+//       res.json(result);
+//     })
+//     .catch(error => {
+//       res.status(400).json({
+//         error: error.message
+//       });
+//     });
+// });
 
 
 // Middleware para manejo de errores
@@ -175,7 +152,7 @@ app.use((error, request, response, next) => {
 });
 
 
-const port = 5058;
+const port = 5059;
 
 app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`);

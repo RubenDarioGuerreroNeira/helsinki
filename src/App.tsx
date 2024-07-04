@@ -1,83 +1,59 @@
-// src/App.js
-
-
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import PhonebookService from './PhonebookService';
 
+
+
+
 const App = () => {
-  const [notes, setNotes] = useState([]);
-  const [newNote, setNewNote] = useState('');
-  const [newImportant, setNewImportant] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
-
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:3227681169.
- const [user, setUser]= useState({
-  name: '',
-  number: '',
-});
-const [number, setNumber] = useState('');
-
+  const [users, setUsers] = useState([]);
+  const [newName, setNewName] = useState('');
+  const [newNumber, setNewNumber] = useState('');
 
   useEffect(() => {
-    PhonebookService.getNotes()
-      .then(response => {
-        setNotes(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching notes:', error);
-      });
+    PhonebookService.getUsers()
+      .then((response: { data: React.SetStateAction<never[]>; }) => setUsers(response.data))
+      .catch((error: any) => console.error('Error fetching users:', error));
   }, []);
 
-  const addNote = (event) => {
+  const addUser = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
-    const noteObject = {
-      content: newNote,
-      important: newImportant,
-    };
+    const userObject = { name: newName, number: newNumber };
 
-    PhonebookService.createNote(noteObject)
-      .then(response => {
-        setNotes(notes.concat(response.data));
-        setNewNote('');
-        setNewImportant(false);
-        setErrorMessage(null);
+    PhonebookService.createUser(userObject)
+      .then((response: { data: ConcatArray<never>; }) => {
+        setUsers(users.concat(response.data));
+        setNewName('');
+        setNewNumber('');
       })
-      .catch(error => {
-        console.error('Error creating note:', error);
-        setErrorMessage('Error creating note: ' + error.response.data.error);
-      });
+      .catch((error: any) => console.error('Error adding user:', error));
   };
 
-  const handleNoteChange = (event) => {
-    setNewNote(event.target.value);
-  };
-
-  const handleImportantChange = (event) => {
-    setNewImportant(event.target.checked);
+  const deleteUser = (id:string) => {
+    PhonebookService.deleteUser(id)
+      .then(() => {
+        setUsers(users.filter(user => user.id !== id));
+      })
+      .catch((error: any) => console.error('Error deleting user:', error));
   };
 
   return (
     <div>
       <h1>Phonebook</h1>
-      {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
-      <form onSubmit={addNote}>
-        <input
-          value={newNote}
-          onChange={handleNoteChange}
-          placeholder="Write a new note"
-        />
-        <input
-          type="checkbox"
-          checked={newImportant}
-          onChange={handleImportantChange}
-        /> Important
-        <button type="submit">Save</button>
+      <form onSubmit={addUser}>
+        <div>
+          Name: <input value={newName} onChange={(e) => setNewName(e.target.value)} />
+        </div>
+        <div>
+          Number: <input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} />
+        </div>
+        <button type="submit">add</button>
       </form>
+      <h2>Numbers</h2>
       <ul>
-        {notes.map(note => (
-          <li key={note.id}>
-            {note.content} <strong>{note.important ? 'Important' : ''}</strong>
+        {users.map(user => (
+          <li key={user.id}>
+            {user.name} {user.number}
+            <button onClick={() => deleteUser(user.id)}>delete</button>
           </li>
         ))}
       </ul>
@@ -86,6 +62,163 @@ const [number, setNumber] = useState('');
 };
 
 export default App;
+
+
+
+
+// version 2-------------------
+// import React, { useState, useEffect } from 'react';
+// import PhonebookService from './PhonebookService'; // Asegúrate de que la ruta sea correcta
+
+// const App = () => {
+//   const [users, setUsers] = useState([]);
+//   const [newName, setNewName] = useState('');
+//   const [newNumber, setNewNumber] = useState('');
+
+//   useEffect(() => {
+//     PhonebookService
+//       .getUsers()
+//       .then((initialUsers: { data: React.SetStateAction<never[]>; }) => setUsers(initialUsers.data))
+//       .catch((error: any) => console.error('Error fetching users:', error));
+//   }, []);
+
+//   const addUser = (event: { preventDefault: () => void; }) => {
+//     event.preventDefault();
+//     const userObject = { name: newName, number: newNumber };
+
+//     PhonebookService
+//       .createUser(userObject)
+//       .then((returnedUser: { data: ConcatArray<never>; }) => {
+//         setUsers(users.concat(returnedUser.data));
+//         setNewName('');
+//         setNewNumber('');
+//       })
+//       .catch((error: any) => console.error('Error adding user:', error));
+//   };
+
+//   const deleteUser = (id: any) => {
+//     PhonebookService
+//       .deleteUser(id)
+//       .then(() => {
+//         setUsers(users.filter(user => user.id !== id));
+//       })
+//       .catch((error: any) => console.error('Error deleting user:', error));
+//   };
+
+//   return (
+//     <div>
+//       <h1>Phonebook</h1>
+//       <form onSubmit={addUser}>
+//         <div>
+//           Name: <input value={newName} onChange={(e) => setNewName(e.target.value)} />
+//         </div>
+//         <div>
+//           Number: <input value={newNumber} onChange={(e) => setNewNumber(e.target.value)} />
+//         </div>
+//         <button type="submit">add</button>
+//       </form>
+//       <h2>Numbers</h2>
+//       <ul>
+//         {users.map(user => (
+//           <li key={user.id}>
+//             {user.name} {user.number}
+//             <button onClick={() => deleteUser(user.id)}>delete</button>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default App;
+
+
+
+// este es el modulo de agenga 1
+// import React, { useState, useEffect } from 'react';
+// import PhonebookService from './PhonebookService';
+
+// const App = () => {
+//   const [notes, setNotes] = useState([]);
+//   const [newNote, setNewNote] = useState('');
+//   const [newImportant, setNewImportant] = useState(false);
+//   const [errorMessage, setErrorMessage] = useState(null);
+
+// // Suggested code may be subject to a license. Learn more: ~LicenseLog:3227681169.
+//  const [user, setUser]= useState({
+//   name: '',
+//   number: '',
+// });
+// const [number, setNumber] = useState('');
+
+
+//   useEffect(() => {
+//     PhonebookService.getNotes()
+//       .then(response => {
+//         setNotes(response.data);
+//       })
+//       .catch(error => {
+//         console.error('Error fetching notes:', error);
+//       });
+//   }, []);
+
+//   const addNote = (event) => {
+//     event.preventDefault();
+//     const noteObject = {
+//       content: newNote,
+//       important: newImportant,
+//     };
+
+//     PhonebookService.createNote(noteObject)
+//       .then(response => {
+//         setNotes(notes.concat(response.data));
+//         setNewNote('');
+//         setNewImportant(false);
+//         setErrorMessage(null);
+//       })
+//       .catch(error => {
+//         console.error('Error creating note:', error);
+//         setErrorMessage('Error creating note: ' + error.response.data.error);
+//       });
+//   };
+
+//   const handleNoteChange = (event) => {
+//     setNewNote(event.target.value);
+//   };
+
+//   const handleImportantChange = (event) => {
+//     setNewImportant(event.target.checked);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Phonebook</h1>
+//       {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
+//       <form onSubmit={addNote}>
+//         <input
+//           value={newNote}
+//           onChange={handleNoteChange}
+//           placeholder="Write a new note"
+//         />
+//         <input
+//           type="checkbox"
+//           checked={newImportant}
+//           onChange={handleImportantChange}
+//         /> Important
+//         <button type="submit">Save</button>
+//       </form>
+//       <ul>
+//         {notes.map(note => (
+//           <li key={note.id}>
+//             {note.content} <strong>{note.important ? 'Important' : ''}</strong>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default App;
 
 
 
