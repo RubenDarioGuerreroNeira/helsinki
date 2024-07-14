@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import PhonebookService from './PhonebookService';
 
 
-
-
 const App = () => {
-  const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<{ id: string, name: string, number: string }[]>([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
 

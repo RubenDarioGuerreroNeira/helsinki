@@ -8,10 +8,12 @@ const mongoose = require('mongoose');
 const Note = require('./models/NotPhone');
 const User = require('./models/UserPhone');
 const cors = require('cors');
+
+
 app.use(morgan('tiny'));
 const notesRouter = require('./Controllers/notesController');
 const userRoutes = require('./Controllers/userControllers');
-
+P
 app.use(cors());
 
 const connectToMongoose = async () => {
