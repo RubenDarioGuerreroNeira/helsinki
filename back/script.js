@@ -16,8 +16,9 @@ function speak(text) {
 
 // Ejemplo de uso
 var texto="Hola, ¿cómo estás?. mi nombre es Sandra.Soy un bot que te va ayudar en la automatización de tareas. tanto en el uso y mantenimiento del Modelo Nl8547 de Lg fabricado en colombia.espero que stes bien.Estoy siendo creada por Rubén Guerrero.el esta usando javascrypt para la creación de este modulo. Gracias por usar esta herramienta"
-
+// separo las frases 
 var frases=texto.split(".");
+// creo el ciclo para recorrer el texto
 frases.forEach(function(frase){
   speak(frase);
 });
